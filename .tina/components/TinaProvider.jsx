@@ -8,7 +8,18 @@ import { tinaConfig } from "../schema";
  * @private Do not import this directly, please import the dynamic provider instead
  */
 const TinaProvider = ({ children }) => {
-  return <TinaCMS {...tinaConfig}>{children}</TinaCMS>;
+  return <TinaCMS 
+  {...tinaConfig}
+  documentCreatorCallback={{
+    onNewDocument: ({ collection:{slug}, breadcrumbs})=>{
+      const relativeUrl = `/${slug}/${breadcrumbs.join("/")}`;
+      return (window.location.href = relativeUrl);
+    },
+    filterCollections:(options)=>{
+      return options.filter((option)=> option.label === "Blog Posts");
+    }
+  }}
+  >{children}</TinaCMS>;
 };
 
 export default TinaProvider;
